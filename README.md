@@ -97,7 +97,7 @@ make install
 #### 方式 2: 使用 Go 安装
 
 ```bash
-go install github.com/cloud-bot/cloud-bot/cmd/cloud-bot@latest
+go install github.com/lucksec/cloud-bot/cmd/cloud-bot@latest
 ```
 
 ### 配置
@@ -105,8 +105,8 @@ go install github.com/cloud-bot/cloud-bot/cmd/cloud-bot@latest
 创建配置文件（可选，有默认值）：
 
 ```bash
-cp .redc.ini.example .redc.ini
-vim .redc.ini
+cp .cloudboot.ini.example .cloudboot.ini
+vim .cloudboot.ini
 ```
 
 ### 基本使用
@@ -249,7 +249,7 @@ cloud-bot/
 │       ├── price_optimizer_service.go  # 价格优化服务
 │       ├── dynamic_template_service.go  # 动态模板服务
 │       └── terraform_service.go         # Terraform 服务
-├── redc-templates/           # Terraform 模板库
+├── templates/           # Terraform 模板库
 │   ├── aliyun/               # 阿里云模板
 │   ├── tencent/              # 腾讯云模板
 │   ├── aws/                  # AWS 模板
@@ -334,7 +334,7 @@ make lint
 
 ### 添加新模板
 
-1. 在 `redc-templates/<provider>/<template-name>/` 目录下创建模板文件
+1. 在 `templates/<provider>/<template-name>/` 目录下创建模板文件
 2. 确保包含 `main.tf` 文件
 3. 可选：添加 `versions.tf`, `outputs.tf`, `variables.tf` 等文件
 4. 运行 `cloud-bot template list` 验证模板是否被识别
@@ -387,8 +387,8 @@ make lint
 
 ## 📮 联系方式
 
-- 问题反馈: [GitHub Issues](https://github.com/lucksec/issues)
-- 功能建议: [GitHub Discussions](https://github.com/lucksec/discussions)
+- 问题反馈: [GitHub Issues](https://github.com/lucksec/cloudbot/issues)
+- 功能建议: [GitHub Discussions](https://github.com/lucksec/cloudbot/discussions)
 
 ---
 
