@@ -84,7 +84,7 @@ Cloud-bot 是一个基于 **Infrastructure as Code (IaC)** 理念开发的云资
 
 ```bash
 # 克隆仓库
-git clone https://github.com/your-repo/cloud-bot.git
+git clone https://github.com/luckone/cloud-bot.git
 cd cloud-bot
 
 # 构建
@@ -387,8 +387,8 @@ make lint
 
 ## 📮 联系方式
 
-- 问题反馈: [GitHub Issues](https://github.com/your-repo/issues)
-- 功能建议: [GitHub Discussions](https://github.com/your-repo/discussions)
+- 问题反馈: [GitHub Issues](https://github.com/lucksec/issues)
+- 功能建议: [GitHub Discussions](https://github.com/lucksec/discussions)
 
 ---
 
