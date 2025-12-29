@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/meta-matrix/meta-matrix/internal/domain"
-	"github.com/meta-matrix/meta-matrix/internal/repository"
+	"github.com/lucksec/cloudbot/internal/domain"
+	"github.com/lucksec/cloudbot/internal/repository"
 )
 
 // PriceService 价格服务接口

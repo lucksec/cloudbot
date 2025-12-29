@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/meta-matrix/meta-matrix/internal/repository"
-	"github.com/meta-matrix/meta-matrix/internal/service"
+	"github.com/lucksec/cloudbot/internal/repository"
+	"github.com/lucksec/cloudbot/internal/service"
 	"github.com/spf13/cobra"
 )
 

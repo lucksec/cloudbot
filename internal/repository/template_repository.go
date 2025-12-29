@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/meta-matrix/meta-matrix/internal/config"
-	"github.com/meta-matrix/meta-matrix/internal/domain"
+	"github.com/lucksec/cloudbot/internal/config"
+	"github.com/lucksec/cloudbot/internal/domain"
 )
 
 // TemplateRepository 模板仓库接口

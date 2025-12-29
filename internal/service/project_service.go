@@ -8,10 +8,10 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	"github.com/meta-matrix/meta-matrix/internal/credentials"
-	"github.com/meta-matrix/meta-matrix/internal/domain"
-	"github.com/meta-matrix/meta-matrix/internal/logger"
-	"github.com/meta-matrix/meta-matrix/internal/repository"
+	"github.com/lucksec/cloudbot/internal/credentials"
+	"github.com/lucksec/cloudbot/internal/domain"
+	"github.com/lucksec/cloudbot/internal/logger"
+	"github.com/lucksec/cloudbot/internal/repository"
 )
 
 // ProjectService 项目服务接口

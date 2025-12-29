@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/meta-matrix/meta-matrix/internal/credentials"
+	"github.com/lucksec/cloudbot/internal/credentials"
 )
 
 // TencentRegionFinder 腾讯云区域查找器

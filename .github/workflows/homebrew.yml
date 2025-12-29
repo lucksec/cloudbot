@@ -1,0 +1,82 @@
+name: Homebrew Release
+
+on:
+  release:
+    types: [published]  # 当创建 release 时触发
+
+jobs:
+  update-homebrew:
+    name: Update Homebrew Formula
+    runs-on: ubuntu-latest
+    if: github.event.release.prerelease == false
+    
+    steps:
+      - name: Checkout cloudbot
+        uses: actions/checkout@v4
+      
+      - name: Get version
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+      
+      - name: Get SHA256 for macOS amd64
+        id: sha256
+        run: |
+          ASSET_URL=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | \
+            jq -r '.assets[] | select(.name | contains("darwin-amd64")) | .browser_download_url')
+          SHA256=$(curl -sL "$ASSET_URL" | shasum -a 256 | awk '{print $1}')
+          echo "sha256=${SHA256}" >> $GITHUB_OUTPUT
+          echo "asset_url=${ASSET_URL}" >> $GITHUB_OUTPUT
+      
+      - name: Checkout homebrew-tap (if exists)
+        uses: actions/checkout@v4
+        with:
+          repository: lucksec/homebrew-tap
+          path: homebrew-tap
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          fetch-depth: 0
+        continue-on-error: true
+      
+      - name: Create or update formula
+        run: |
+          if [ -d "homebrew-tap" ]; then
+            FORMULA_FILE="homebrew-tap/Formula/cloudbot.rb"
+            mkdir -p homebrew-tap/Formula
+            
+            cat > "$FORMULA_FILE" <<EOF
+          class Cloudbot < Formula
+            desc "基于 Infrastructure as Code (IaC) 的云资源编排工具"
+            homepage "https://github.com/lucksec/cloudbot"
+            url "${{ steps.sha256.outputs.asset_url }}"
+            sha256 "${{ steps.sha256.outputs.sha256 }}"
+            version "${{ steps.version.outputs.version }}"
+            
+            if OS.mac?
+              if Hardware::CPU.arm?
+                url "https://github.com/lucksec/cloudbot/releases/download/${{ steps.version.outputs.version }}/cloudbot-darwin-arm64"
+                sha256 ""  # 需要更新
+              end
+            end
+            
+            def install
+              bin.install "cloudbot"
+            end
+            
+            test do
+              system "#{bin}/cloudbot", "--version"
+            end
+          end
+          EOF
+            
+            cd homebrew-tap
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add Formula/cloudbot.rb
+            git commit -m "Update cloudbot to ${{ steps.version.outputs.version }}" || exit 0
+            git push
+          else
+            echo "Homebrew tap repository not found. Skipping formula update."
+            echo "To enable Homebrew releases, create a repository at lucksec/homebrew-tap"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+

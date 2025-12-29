@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/meta-matrix/meta-matrix/internal/config"
-	"github.com/meta-matrix/meta-matrix/internal/domain"
+	"github.com/lucksec/cloudbot/internal/config"
+	"github.com/lucksec/cloudbot/internal/domain"
 	"gopkg.in/ini.v1"
 )
 

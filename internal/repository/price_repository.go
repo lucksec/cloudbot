@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/meta-matrix/meta-matrix/internal/config"
-	"github.com/meta-matrix/meta-matrix/internal/domain"
+	"github.com/lucksec/cloudbot/internal/config"
+	"github.com/lucksec/cloudbot/internal/domain"
 )
 
 // PriceRepository 价格仓库接口

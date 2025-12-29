@@ -6,8 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/meta-matrix/meta-matrix/internal/credentials"
-	"github.com/meta-matrix/meta-matrix/internal/logger"
+	"github.com/lucksec/cloudbot/internal/credentials"
+	"github.com/lucksec/cloudbot/internal/logger"
 )
 
 // DynamicTemplateService 动态模板服务
