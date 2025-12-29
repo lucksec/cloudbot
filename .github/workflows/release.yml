@@ -13,12 +13,12 @@ on:
 
 jobs:
   build:
-    name: Build and Release
+    name: Build (${{ matrix.goos }}-${{ matrix.goarch }})
     runs-on: ubuntu-latest
-    permissions:
-      contents: write  # 需要写入权限来创建 release
+    continue-on-error: false
     
     strategy:
+      fail-fast: false  # 让各平台独立构建，一个失败不影响其他
       matrix:
         include:
           - goos: linux
@@ -67,28 +67,58 @@ jobs:
           GOARCH: ${{ matrix.goarch }}
           CGO_ENABLED: 0
         run: |
-          OUTPUT_NAME="cloudbot${matrix.ext}"
-          if [ "${{ matrix.goos }}" == "windows" ]; then
-            OUTPUT_NAME="cloudbot.exe"
-          fi
+          set -e  # 遇到错误立即退出
           
-          go build -ldflags="-s -w -X main.version=${{ steps.tag.outputs.version }}" \
+          echo "Building for ${{ matrix.goos }}/${{ matrix.goarch }}"
+          
+          OUTPUT_NAME="cloudbot${{ matrix.ext }}"
+          FINAL_NAME="cloudbot-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}"
+          
+          echo "Output name: ${OUTPUT_NAME}"
+          echo "Final name: ${FINAL_NAME}"
+          
+          # 构建
+          go build -v -ldflags="-s -w -X main.version=${{ steps.tag.outputs.version }}" \
             -o "${OUTPUT_NAME}" \
             ./cmd/cloudbot
           
+          # 验证文件是否存在
+          if [ ! -f "${OUTPUT_NAME}" ]; then
+            echo "Error: Build failed, output file not found"
+            exit 1
+          fi
+          
+          # 创建发布目录
           mkdir -p release
-          mv "${OUTPUT_NAME}" "release/cloudbot-${matrix.goos}-${matrix.goarch}${matrix.ext}"
+          
+          # 移动文件
+          mv "${OUTPUT_NAME}" "release/${FINAL_NAME}"
+          
+          echo "Build successful: release/${FINAL_NAME}"
+          ls -lh "release/${FINAL_NAME}"
       
       - name: Create checksum
         shell: bash
         run: |
+          set -e
           cd release
-          FILE="cloudbot-${matrix.goos}-${matrix.goarch}${matrix.ext}"
+          FILE="cloudbot-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}"
+          
+          if [ ! -f "${FILE}" ]; then
+            echo "Error: File not found: ${FILE}"
+            exit 1
+          fi
+          
+          echo "Creating checksum for: ${FILE}"
+          
           if [ "${{ matrix.goos }}" == "windows" ]; then
             sha256sum "${FILE}" > "${FILE}.sha256"
           else
             shasum -a 256 "${FILE}" > "${FILE}.sha256"
           fi
+          
+          echo "Checksum created: ${FILE}.sha256"
+          cat "${FILE}.sha256"
       
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -98,9 +128,48 @@ jobs:
             release/cloudbot-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}
             release/cloudbot-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}.sha256
           retention-days: 30
+          if-no-files-found: error
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: always()  # 即使部分构建失败也创建 release
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Get version from tag
+        id: tag
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION=${GITHUB_REF#refs/tags/}
+          fi
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Version: ${VERSION}"
+      
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: cloudbot-*
+          merge-multiple: true
+      
+      - name: Prepare release files
+        run: |
+          mkdir -p release
+          # 将所有 artifacts 中的文件复制到 release 目录
+          find artifacts -type f -name "cloudbot-*" -exec cp {} release/ \;
+          echo "Release files:"
+          ls -lh release/
       
       - name: Create Release
-        if: matrix.goos == 'linux' && matrix.goarch == 'amd64'
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.tag.outputs.version }}
@@ -138,10 +207,10 @@ jobs:
             # Windows (PowerShell)
             Get-FileHash cloudbot-*.exe -Algorithm SHA256
             ```
-          files: |
-            release/*
+          files: release/*
           draft: false
           prerelease: false
+          fail_on_unmatched_files: false  # 即使部分文件缺失也继续
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
