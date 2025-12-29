@@ -77,7 +77,7 @@ func GetDefaultManager() CredentialManager {
 		var configPath string
 		configPaths := []string{
 			".redc.ini",
-			filepath.Join(os.Getenv("HOME"), ".meta-matrix", ".redc.ini"),
+			filepath.Join(os.Getenv("HOME"), ".cloudbot", ".redc.ini"),
 		}
 		
 		// 查找已存在的配置文件

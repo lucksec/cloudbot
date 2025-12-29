@@ -44,7 +44,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	log.Info("meta-matrix 启动")
+	log.Info("cloudbot 启动 by:luckone")
 	log.Debug("配置加载成功: WorkDir=%s, TemplateDir=%s, ProjectDir=%s",
 		cfg.WorkDir, cfg.TemplateDir, cfg.ProjectDir)
 
@@ -78,10 +78,12 @@ func main() {
 
 	// 创建根命令
 	rootCmd := &cobra.Command{
-		Use:   "meta-matrix",
-		Short: "meta-matrix 是一个基于 IaC 的云资源编排工具",
-		Long: `meta-matrix 是一个基于 Infrastructure as Code (IaC) 理念开发的云资源编排工具。
-通过 Terraform 模板，可以一键部署不同云服务商、不同地区的云资源。`,
+		Use:   "cloudbot",
+		Short: "cloudbot 是一个基于 IaC 的云资源编排工具 by:luckone",
+		Long: `cloudbot 是一个基于 Infrastructure as Code (IaC) 理念开发的云资源编排工具。
+通过 Terraform 模板，可以一键部署不同云服务商、不同地区的云资源。
+
+by:luckone`,
 	}
 
 	// 添加项目命令组
@@ -154,7 +156,7 @@ func createProjectCmd(projectSvc service.ProjectService) *cobra.Command {
 		Short: "创建新项目",
 		Long:  "创建一个新的项目。项目名称只能包含字母、数字、连字符和下划线。",
 		Example: `  # 创建名为 my-project 的项目
-  meta-matrix project create my-project`,
+  cloudbot project create my-project`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			name := args[0]
@@ -203,7 +205,7 @@ func deleteProjectCmd(projectSvc service.ProjectService) *cobra.Command {
 		Short: "删除项目",
 		Long:  "删除指定的项目。注意：如果项目包含已部署的场景，需要先销毁场景才能删除项目。",
 		Example: `  # 删除项目 my-project
-  meta-matrix project delete my-project`,
+  cloudbot project delete my-project`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			name := args[0]
@@ -233,7 +235,7 @@ func initProjectCmd(projectSvc service.ProjectService) *cobra.Command {
 
 这样后续执行场景部署 (scenario deploy) 时，就不需要再次长时间等待初始化步骤。`,
 		Example: `  # 初始化项目 my-project（预加载所有场景的 provider）
-  meta-matrix project init my-project`,
+  cloudbot project init my-project`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			name := args[0]
@@ -268,25 +270,25 @@ func createScenarioCmd(projectSvc service.ProjectService, priceSvc service.Price
 
 示例:
   # 使用阿里云 ECS 模板创建场景
-  meta-matrix scenario create my-project aliyun ecs
+  cloudbot scenario create my-project aliyun ecs
   
   # 使用价格优化自动选择最低价格配置
-  meta-matrix scenario create my-project aliyun ecs --optimal
+  cloudbot scenario create my-project aliyun ecs --optimal
   
   # 使用腾讯云文件服务器模板创建场景
-  meta-matrix scenario create my-project tencent file`,
+  cloudbot scenario create my-project tencent file`,
 		Example: `  # 创建阿里云 ECS 场景
-  meta-matrix scenario create my-project aliyun ecs
+  cloudbot scenario create my-project aliyun ecs
   
   # 创建场景并自动应用最优价格配置
-  meta-matrix scenario create my-project aliyun ecs --optimal
+  cloudbot scenario create my-project aliyun ecs --optimal
   
   # 创建 aliyun-proxy 场景（指定区域）
-  meta-matrix scenario create my-project aliyun aliyun-proxy bj
-  meta-matrix scenario create my-project aliyun aliyun-proxy sh
+  cloudbot scenario create my-project aliyun aliyun-proxy bj
+  cloudbot scenario create my-project aliyun aliyun-proxy sh
   
   # 创建腾讯云文件服务器场景
-  meta-matrix scenario create my-project tencent file`,
+  cloudbot scenario create my-project tencent file`,
 		Args: cobra.RangeArgs(3, 4),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			projectName := args[0]
@@ -383,7 +385,7 @@ func createScenarioCmd(projectSvc service.ProjectService, priceSvc service.Price
 								fmt.Printf("  可节省: %.2f CNY/月 (%.1f%%)\n",
 									saving, (saving/monthPriceCNY)*100)
 							}
-							fmt.Printf("  使用命令查看详细比对: meta-matrix price compare %s\n", templateType)
+							fmt.Printf("  使用命令查看详细比对: cloudbot price compare %s\n", templateType)
 						}
 					}
 				}
@@ -422,27 +424,27 @@ func createDynamicScenarioCmd(projectSvc service.ProjectService, priceSvc servic
 
 示例:
   # 动态创建阿里云代理场景（自动选择区域和实例类型）
-  meta-matrix scenario create-dynamic my-project aliyun proxy
+  cloudbot scenario create-dynamic my-project aliyun proxy
   
   # 动态创建阿里云代理场景（指定区域）
-  meta-matrix scenario create-dynamic my-project aliyun proxy cn-beijing
+  cloudbot scenario create-dynamic my-project aliyun proxy cn-beijing
   
   # 动态创建工具执行场景
-  meta-matrix scenario create-dynamic my-project aliyun task-executor cn-shanghai
+  cloudbot scenario create-dynamic my-project aliyun task-executor cn-shanghai
   
   # 使用最优价格配置
-  meta-matrix scenario create-dynamic my-project aliyun proxy --optimal
+  cloudbot scenario create-dynamic my-project aliyun proxy --optimal
   
   # 指定实例类型和节点数
-  meta-matrix scenario create-dynamic my-project aliyun proxy cn-beijing --instance-type ecs.t6-c1m1.small --node-count 5`,
+  cloudbot scenario create-dynamic my-project aliyun proxy cn-beijing --instance-type ecs.t6-c1m1.small --node-count 5`,
 		Example: `  # 动态创建代理场景
-  meta-matrix scenario create-dynamic my-project aliyun proxy
+  cloudbot scenario create-dynamic my-project aliyun proxy
   
   # 动态创建工具执行场景
-  meta-matrix scenario create-dynamic my-project aliyun task-executor cn-shanghai
+  cloudbot scenario create-dynamic my-project aliyun task-executor cn-shanghai
   
   # 使用最优价格配置
-  meta-matrix scenario create-dynamic my-project aliyun proxy --optimal`,
+  cloudbot scenario create-dynamic my-project aliyun proxy --optimal`,
 		Args: cobra.RangeArgs(3, 4),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			projectName := args[0]
@@ -461,7 +463,7 @@ func createDynamicScenarioCmd(projectSvc service.ProjectService, priceSvc servic
 			// 获取动态模板服务
 			credManager := credentials.GetDefaultManager()
 			if !credManager.HasCredentials(credentials.Provider(provider)) {
-				return fmt.Errorf("未配置 %s 的凭据，请先运行: meta-matrix credential set %s", provider, provider)
+				return fmt.Errorf("未配置 %s 的凭据，请先运行: cloudbot credential set %s", provider, provider)
 			}
 
 			dynamicTemplateSvc := service.NewDynamicTemplateService(credManager)
@@ -574,7 +576,7 @@ func listScenariosCmd(projectSvc service.ProjectService) *cobra.Command {
 		Short: "列出项目的所有场景",
 		Long:  "列出指定项目的所有场景，包括场景ID、状态和模板信息。",
 		Example: `  # 列出项目 my-project 的所有场景
-  meta-matrix scenario list my-project`,
+  cloudbot scenario list my-project`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			projectName := args[0]
@@ -616,10 +618,10 @@ func statusScenariosCmd(projectSvc service.ProjectService) *cobra.Command {
   - 资源名称列表（可用于排查问题）
   - 实例详细信息（ECS/EC2 等）`,
 		Example: `  # 查看项目 my-project 的云资源状态
-  meta-matrix scenario status my-project
+  cloudbot scenario status my-project
   
   # 查看指定场景的云资源状态
-  meta-matrix scenario status my-project <scenario-id>`,
+  cloudbot scenario status my-project <scenario-id>`,
 		Args: cobra.RangeArgs(1, 2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			projectName := args[0]
@@ -734,23 +736,23 @@ func deployScenarioCmd(projectSvc service.ProjectService) *cobra.Command {
 
 注意: 默认会自动批准（--auto-approve），如需交互式确认请使用 --interactive 标志。`,
 		Example: `  # 自动部署（默认行为，跳过确认）
-  meta-matrix scenario deploy my-project <scenario-id>
+  cloudbot scenario deploy my-project <scenario-id>
   
   # 交互式部署（会显示 plan 并询问确认）
-  meta-matrix scenario deploy my-project <scenario-id> --interactive
+  cloudbot scenario deploy my-project <scenario-id> --interactive
 
   # 指定节点数量（覆盖模板中的 node_count）
-  meta-matrix scenario deploy my-project <scenario-id> --node 10
+  cloudbot scenario deploy my-project <scenario-id> --node 10
 
   # 部署并执行工具（task-executor-spot 模板）
-  meta-matrix scenario deploy my-project <scenario-id> 1 gogo -o -p - -i 10.1.79.254
+  cloudbot scenario deploy my-project <scenario-id> 1 gogo -o -p - -i 10.1.79.254
   
   # 使用 --node 标志指定节点数量
-  meta-matrix scenario deploy my-project <scenario-id> --node 5 gogo -o -p - -i 10.1.79.254
+  cloudbot scenario deploy my-project <scenario-id> --node 5 gogo -o -p - -i 10.1.79.254
   
   # 指定区域（aliyun-proxy 模板）
-  meta-matrix scenario deploy my-project <scenario-id> --region bj
-  meta-matrix scenario deploy my-project <scenario-id> --region sh --node 10`,
+  cloudbot scenario deploy my-project <scenario-id> --region bj
+  cloudbot scenario deploy my-project <scenario-id> --region sh --node 10`,
 		Args: cobra.MinimumNArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			projectName := args[0]
@@ -837,10 +839,10 @@ func destroyScenarioCmd(projectSvc service.ProjectService) *cobra.Command {
 
 此操作不可逆，请谨慎操作。`,
 		Example: `  # 交互式销毁（会询问确认）
-  meta-matrix scenario destroy my-project <scenario-id>
+  cloudbot scenario destroy my-project <scenario-id>
   
   # 自动销毁（跳过确认）
-  meta-matrix scenario destroy my-project <scenario-id> --auto-approve`,
+  cloudbot scenario destroy my-project <scenario-id> --auto-approve`,
 		Args: cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			projectName := args[0]
@@ -911,10 +913,10 @@ func comparePriceCmd(priceSvc service.PriceService) *cobra.Command {
   - ec2: AWS EC2 实例
   - vps: VPS 服务器`,
 		Example: `  # 比对 ECS 类型模板的价格
-  meta-matrix price compare ecs
+  cloudbot price compare ecs
   
   # 比对代理服务器类型模板的价格
-  meta-matrix price compare proxy`,
+  cloudbot price compare proxy`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			templateType := args[0]
@@ -970,7 +972,7 @@ func listPriceCmd(priceSvc service.PriceService) *cobra.Command {
 		Short: "列出所有模板的价格信息",
 		Long:  "列出所有已配置的模板价格信息，包括云服务商、模板名称、规格和价格。",
 		Example: `  # 列出所有价格信息
-  meta-matrix price list`,
+  cloudbot price list`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			prices, err := priceSvc.ListPrices(context.Background())
 			if err != nil {
@@ -1056,10 +1058,10 @@ func findOptimalCmd(priceOptimizerSvc service.PriceOptimizerService) *cobra.Comm
   - ALICLOUD_ACCESS_KEY: 阿里云 AccessKey ID
   - ALICLOUD_SECRET_KEY: 阿里云 SecretKey`,
 		Example: `  # 查找阿里云 ECS 的最优配置
-  meta-matrix price optimal aliyun ecs
+  cloudbot price optimal aliyun ecs
   
   # 查找指定实例类型的最优配置
-  meta-matrix price optimal aliyun ecs --instance-types ecs.t5-lc1m1.small,ecs.t5-lc1m2.small`,
+  cloudbot price optimal aliyun ecs --instance-types ecs.t5-lc1m1.small,ecs.t5-lc1m2.small`,
 		Args: cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			provider := args[0]
@@ -1107,10 +1109,10 @@ func listRegionPricesCmd(priceOptimizerSvc service.PriceOptimizerService) *cobra
   - ALICLOUD_ACCESS_KEY: 阿里云 AccessKey ID
   - ALICLOUD_SECRET_KEY: 阿里云 SecretKey`,
 		Example: `  # 列出阿里云 ECS 在常用区域的价格
-  meta-matrix price regions aliyun ecs
+  cloudbot price regions aliyun ecs
 
   # 指定实例类型和区域
-  meta-matrix price regions aliyun ecs \
+  cloudbot price regions aliyun ecs \
     --instance-types ecs.t5-lc1m1.small,ecs.t5-lc1m2.small \
     --regions cn-beijing,cn-shanghai,cn-hangzhou`,
 		Args: cobra.ExactArgs(2),

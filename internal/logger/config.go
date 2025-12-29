@@ -14,7 +14,7 @@ type Config struct {
 	// LogDir 日志目录
 	LogDir string
 	
-	// LogFile 日志文件名（如果为空，则使用默认格式：meta-matrix-YYYY-MM-DD.log）
+	// LogFile 日志文件名（如果为空，则使用默认格式：cloudbot-YYYY-MM-DD.log）
 	LogFile string
 }
 

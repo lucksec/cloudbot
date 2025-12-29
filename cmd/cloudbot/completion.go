@@ -120,28 +120,28 @@ func setupCompletion(rootCmd *cobra.Command) {
 安装方法:
 
 Bash:
-  $ source <(meta-matrix completion bash)
+  $ source <(cloudbot completion bash)
   
   # 或添加到 ~/.bashrc
-  $ echo 'source <(meta-matrix completion bash)' >> ~/.bashrc
+  $ echo 'source <(cloudbot completion bash)' >> ~/.bashrc
 
 Zsh:
-  $ source <(meta-matrix completion zsh)
+  $ source <(cloudbot completion zsh)
   
   # 或添加到 ~/.zshrc
-  $ echo 'source <(meta-matrix completion zsh)' >> ~/.zshrc
+  $ echo 'source <(cloudbot completion zsh)' >> ~/.zshrc
 
 Fish:
-  $ meta-matrix completion fish | source
+  $ cloudbot completion fish | source
   
-  # 或添加到 ~/.config/fish/completions/meta-matrix.fish
-  $ meta-matrix completion fish > ~/.config/fish/completions/meta-matrix.fish
+  # 或添加到 ~/.config/fish/completions/cloudbot.fish
+  $ cloudbot completion fish > ~/.config/fish/completions/cloudbot.fish
 
 PowerShell:
-  $ meta-matrix completion powershell | Out-String | Invoke-Expression
+  $ cloudbot completion powershell | Out-String | Invoke-Expression
   
   # 或添加到 PowerShell profile
-  $ meta-matrix completion powershell >> $PROFILE
+  $ cloudbot completion powershell >> $PROFILE
 `,
 		DisableFlagsInUseLine: true,
 		ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},

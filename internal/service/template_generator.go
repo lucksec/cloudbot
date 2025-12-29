@@ -104,7 +104,7 @@ func (g *templateGenerator) getProviderClient(provider string) (CloudProviderCli
 // generateProxyTemplate 生成代理场景模板
 func (g *templateGenerator) generateProxyTemplate(ctx context.Context, provider, region, instanceType string, options map[string]interface{}) (string, error) {
 	// 创建临时目录
-	tempDir, err := os.MkdirTemp("", "meta-matrix-template-*")
+	tempDir, err := os.MkdirTemp("", "cloudbot-template-*")
 	if err != nil {
 		return "", fmt.Errorf("创建临时目录失败: %w", err)
 	}
@@ -126,7 +126,7 @@ func (g *templateGenerator) generateProxyTemplate(ctx context.Context, provider,
 // generateTaskExecutorTemplate 生成工具执行场景模板
 func (g *templateGenerator) generateTaskExecutorTemplate(ctx context.Context, provider, region, instanceType string, options map[string]interface{}) (string, error) {
 	// 创建临时目录
-	tempDir, err := os.MkdirTemp("", "meta-matrix-template-*")
+	tempDir, err := os.MkdirTemp("", "cloudbot-template-*")
 	if err != nil {
 		return "", fmt.Errorf("创建临时目录失败: %w", err)
 	}

@@ -60,13 +60,13 @@ type LogConfig struct {
 func LoadConfig() (*Config, error) {
 	// 确定配置文件路径
 	var configPath string
-	configPaths := []string{".redc.ini", "$HOME/.meta-matrix/.redc.ini"}
+	configPaths := []string{".redc.ini", "$HOME/.cloudbot/.redc.ini"}
 	for _, path := range configPaths {
 		if path[0] == '$' {
-			if path == "$HOME/.meta-matrix/.redc.ini" {
+			if path == "$HOME/.cloudbot/.redc.ini" {
 				homeDir := os.Getenv("HOME")
 				if homeDir != "" {
-					path = filepath.Join(homeDir, ".meta-matrix", ".redc.ini")
+					path = filepath.Join(homeDir, ".cloudbot", ".redc.ini")
 				} else {
 					continue
 				}
@@ -102,10 +102,10 @@ func LoadConfig() (*Config, error) {
 	for _, configPath := range configPaths {
 		if configPath[0] == '$' {
 			// 处理环境变量
-			if configPath == "$HOME/.meta-matrix/.redc.ini" {
+			if configPath == "$HOME/.cloudbot/.redc.ini" {
 				homeDir := os.Getenv("HOME")
 				if homeDir != "" {
-					configPath = filepath.Join(homeDir, ".meta-matrix", ".redc.ini")
+					configPath = filepath.Join(homeDir, ".cloudbot", ".redc.ini")
 				} else {
 					continue
 				}

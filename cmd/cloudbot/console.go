@@ -22,7 +22,7 @@ type console struct {
 }
 
 // newConsoleCmd 创建控制台命令
-// 用户执行 `meta-matrix console` 即可进入交互式控制台
+// 用户执行 `cloudbot console` 即可进入交互式控制台
 func newConsoleCmd(projectSvc service.ProjectService, templateRepo repository.TemplateRepository) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "console",
@@ -30,7 +30,7 @@ func newConsoleCmd(projectSvc service.ProjectService, templateRepo repository.Te
 		Long: `进入交互式控制台，对项目、场景、模板进行统一管理。
 
 示例:
-  meta-matrix console
+  cloudbot console
 
 进入控制台后，可使用命令:
   help                         显示帮助
@@ -65,8 +65,8 @@ func (c *console) run() error {
 	p := prompt.New(
 		c.executor,                           // 输入执行函数
 		c.completer,                          // 补全函数
-		prompt.OptionPrefix("meta-matrix> "), // 提示符
-		prompt.OptionTitle("meta-matrix console"),           // 标题
+		prompt.OptionPrefix("cloudbot> "), // 提示符
+		prompt.OptionTitle("cloudbot console"),           // 标题
 		prompt.OptionSuggestionBGColor(prompt.DarkGray),     // 建议背景色
 		prompt.OptionSuggestionTextColor(prompt.White),      // 建议文字颜色
 		prompt.OptionSelectedSuggestionBGColor(prompt.Blue), // 选中建议背景色
@@ -522,7 +522,7 @@ func (c *console) completeTemplates(provider, current string) []prompt.Suggest {
 // printWelcome 打印欢迎信息和基础命令提示
 func (c *console) printWelcome() {
 	fmt.Println("╔═════════════════════════════════════════════════════════╗")
-	fmt.Println("║           Meta-Matrix 交互式控制台 v1.0.0               ║")
+ 	fmt.Println("║           Cloudbot 交互式控制台 v1.0.0 by:luckone       ║")
 	fmt.Println("╚═════════════════════════════════════════════════════════╝")
 	fmt.Println()
 	fmt.Println("提示: 输入 'help' 查看可用命令，输入 'exit' 或 'quit' 退出")

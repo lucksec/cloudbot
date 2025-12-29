@@ -46,7 +46,7 @@ func listCredentialsCmd() *cobra.Command {
 
 			if len(providers) == 0 {
 				fmt.Println("未配置任何凭据")
-				fmt.Println("\n提示: 使用 'meta-matrix credential set <provider>' 配置凭据")
+				fmt.Println("\n提示: 使用 'cloudbot credential set <provider>' 配置凭据")
 				return nil
 			}
 
@@ -90,10 +90,10 @@ func setCredentialCmd() *cobra.Command {
 
 示例:
   # 交互式设置（会提示输入）
-  meta-matrix credential set aliyun
+  cloudbot credential set aliyun
   
   # 通过参数设置
-  meta-matrix credential set aliyun --access-key <key> --secret-key <key> --region <region>`,
+  cloudbot credential set aliyun --access-key <key> --secret-key <key> --region <region>`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			providerStr := args[0]

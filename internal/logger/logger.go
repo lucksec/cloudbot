@@ -77,7 +77,7 @@ func InitLogger(config *Config) (Logger, error) {
 		if config.LogFile != "" {
 			logFile = filepath.Join(logDir, config.LogFile)
 		} else {
-			logFile = filepath.Join(logDir, fmt.Sprintf("meta-matrix-%s.log", time.Now().Format("2006-01-02")))
+			logFile = filepath.Join(logDir, fmt.Sprintf("cloudbot-%s.log", time.Now().Format("2006-01-02")))
 		}
 		
 		// 打开日志文件（追加模式）
