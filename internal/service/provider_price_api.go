@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lucksec/cloudbot/internal/credentials"
-	"github.com/lucksec/cloudbot/internal/domain"
+	"github.com/meta-matrix/meta-matrix/internal/credentials"
+	"github.com/meta-matrix/meta-matrix/internal/domain"
 )
 
 // fetchAliyunPrice 通过阿里云 API 获取价格

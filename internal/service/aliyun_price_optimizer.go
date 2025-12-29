@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lucksec/cloudbot/internal/config"
+	"github.com/meta-matrix/meta-matrix/internal/config"
 )
 
 // AliyunPriceOptimizer 阿里云价格优化器

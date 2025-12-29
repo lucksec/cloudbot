@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/lucksec/cloudbot/internal/config"
+	"github.com/meta-matrix/meta-matrix/internal/config"
 )
 
 // PriceOptimizerService 价格优化服务

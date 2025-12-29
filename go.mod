@@ -1,4 +1,4 @@
-module github.com/meta-matrix/meta-matrix
+module github.com/lucksec/cloudbot
 
 go 1.21
 

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/lucksec/cloudbot/internal/credentials"
-	"github.com/lucksec/cloudbot/internal/logger"
+	"github.com/meta-matrix/meta-matrix/internal/credentials"
+	"github.com/meta-matrix/meta-matrix/internal/logger"
 )
 
 // TemplateGenerator 动态模板生成器

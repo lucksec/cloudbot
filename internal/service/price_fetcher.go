@@ -9,9 +9,9 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/lucksec/cloudbot/internal/config"
-	"github.com/lucksec/cloudbot/internal/domain"
-	"github.com/lucksec/cloudbot/internal/repository"
+	"github.com/meta-matrix/meta-matrix/internal/config"
+	"github.com/meta-matrix/meta-matrix/internal/domain"
+	"github.com/meta-matrix/meta-matrix/internal/repository"
 )
 
 // PriceFetcher 价格查询器接口

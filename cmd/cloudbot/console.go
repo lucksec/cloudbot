@@ -8,9 +8,9 @@ import (
 	"strings"
 
 	prompt "github.com/c-bata/go-prompt"
-	"github.com/lucksec/cloudbot/internal/credentials"
-	"github.com/lucksec/cloudbot/internal/repository"
-	"github.com/lucksec/cloudbot/internal/service"
+	"github.com/meta-matrix/meta-matrix/internal/credentials"
+	"github.com/meta-matrix/meta-matrix/internal/repository"
+	"github.com/meta-matrix/meta-matrix/internal/service"
 	"github.com/spf13/cobra"
 )
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/lucksec/cloudbot/internal/credentials"
+	"github.com/meta-matrix/meta-matrix/internal/credentials"
 	"github.com/spf13/cobra"
 )
 
