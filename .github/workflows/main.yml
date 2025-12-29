@@ -1,0 +1,147 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # 当推送以 v 开头的标签时触发（如 v1.0.0）
+  workflow_dispatch:  # 允许手动触发
+    inputs:
+      version:
+        description: '版本号 (例如: v1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 需要写入权限来创建 release
+    
+    strategy:
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+            ext: ""
+          - goos: linux
+            goarch: arm64
+            ext: ""
+          - goos: darwin
+            goarch: amd64
+            ext: ""
+          - goos: darwin
+            goarch: arm64
+            ext: ""
+          - goos: windows
+            goarch: amd64
+            ext: ".exe"
+          - goos: windows
+            goarch: arm64
+            ext: ".exe"
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+      
+      - name: Get version from tag
+        id: tag
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION=${GITHUB_REF#refs/tags/}
+          fi
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Version: ${VERSION}"
+      
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 0
+        run: |
+          OUTPUT_NAME="cloudbot${matrix.ext}"
+          if [ "${{ matrix.goos }}" == "windows" ]; then
+            OUTPUT_NAME="cloudbot.exe"
+          fi
+          
+          go build -ldflags="-s -w -X main.version=${{ steps.tag.outputs.version }}" \
+            -o "${OUTPUT_NAME}" \
+            ./cmd/cloudbot
+          
+          mkdir -p release
+          mv "${OUTPUT_NAME}" "release/cloudbot-${matrix.goos}-${matrix.goarch}${matrix.ext}"
+      
+      - name: Create checksum
+        shell: bash
+        run: |
+          cd release
+          FILE="cloudbot-${matrix.goos}-${matrix.goarch}${matrix.ext}"
+          if [ "${{ matrix.goos }}" == "windows" ]; then
+            sha256sum "${FILE}" > "${FILE}.sha256"
+          else
+            shasum -a 256 "${FILE}" > "${FILE}.sha256"
+          fi
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudbot-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: |
+            release/cloudbot-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}
+            release/cloudbot-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}.sha256
+          retention-days: 30
+      
+      - name: Create Release
+        if: matrix.goos == 'linux' && matrix.goarch == 'amd64'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.tag.outputs.version }}
+          name: Release ${{ steps.tag.outputs.version }}
+          body: |
+            ## Cloudbot ${{ steps.tag.outputs.version }}
+            
+            ### 安装方式
+            
+            #### 使用 Homebrew (macOS/Linux)
+            ```bash
+            brew install lucksec/cloudbot/cloudbot
+            ```
+            
+            #### 手动安装
+            
+            1. 下载对应平台的二进制文件
+            2. 解压并移动到 PATH 目录
+            3. 添加执行权限（Linux/macOS）
+            
+            ### 支持的平台
+            
+            - Linux (amd64, arm64)
+            - macOS (amd64, arm64)
+            - Windows (amd64, arm64)
+            
+            ### 校验文件
+            
+            每个二进制文件都包含对应的 `.sha256` 校验文件，可以使用以下命令验证：
+            
+            ```bash
+            # Linux/macOS
+            shasum -a 256 -c cloudbot-*.sha256
+            
+            # Windows (PowerShell)
+            Get-FileHash cloudbot-*.exe -Algorithm SHA256
+            ```
+          files: |
+            release/*
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
