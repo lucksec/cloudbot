@@ -71,8 +71,10 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git add Formula/cloudbot.rb
-            git commit -m "Update cloudbot to ${{ steps.version.outputs.version }}" || exit 0
-            git push
+            # 已禁用自动提交
+            # git commit -m "Update cloudbot to ${{ steps.version.outputs.version }}" || exit 0
+            # git push
+            echo "已跳过自动提交，如需更新请手动提交"
           else
             echo "Homebrew tap repository not found. Skipping formula update."
             echo "To enable Homebrew releases, create a repository at lucksec/homebrew-tap"
